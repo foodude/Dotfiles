@@ -1,0 +1,23 @@
+A StaysOnTop window is a window which is above 
+the normal (i.e., StaysPut) windows, a StaysOnBottom
+window is below the normal windows. Here the list
+of StaysOnTop and StaysOnBottom windows:
+
+Current Setting:
+---------------
+Style MiniButtons StaysOnTop
+
+Setting-1:
+----------
+Style MiniButtons StaysOnTop
+
+Setting-2:
+----------
+Style MiniButtons StaysOnTop
+
+Setting-3:
+----------
+
+Setting-4:
+----------
+

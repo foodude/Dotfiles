@@ -1,0 +1,141 @@
+##########################
+## MODULES		##
+##########################
+#
+#-------------------------------------------------------------------------------#
+# FVWM Button Bar                                                               #
+#-------------------------------------------------------------------------------#
+
+Style BarButtons !Title, !Handles, Sticky, WindowListSkip, \
+	CirculateSkip, BorderWidth 1
+
+DestroyModuleConfig BarButtons: *
+*BarButtons: Fore Black
+*BarButtons: Back #000000
+*BarButtons: Font "xft:sans-serif:Bold:pixelsize=10;-*-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*"
+
+*BarButtons: Geometry 65x65-1855-1015
+*BarButtons: Columns 1
+
+## FVWM Pager ----->>>
+*BarButtons: (1x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
+
+
+
+#-------------------------------------------------------------------------------#
+# FVWM: WinMakerAppButtons & WinMakerAppPanelCd	                                #
+#-------------------------------------------------------------------------------#
+Style "WinMakerApp*" !Title, !Handles, BorderWidth 0, Sticky, \
+	WindowListSkip, CirculateSkip
+DestroyModuleConfig WinMakerAppButtons: *
+
+*WinMakerAppButtons: Geometry +0+65
+*WinMakerAppButtons: Columns 1
+*WinMakerAppButtons: Back #202020
+*WinMakerAppButtons: Fore black
+
+## wmtime
+*WinMakerAppButtons: (Frame 1, Size 64 64, \
+        Swallow  "wmtime" 'Exec exec wmtime')
+## wmbattery
+*WinMakerAppButtons: (Frame 1, Size 64 64, \
+        Swallow  "wmbattery" 'Exec exec wmbattery')
+## wmmisc
+*WinMakerAppButtons: (Frame 1, Size 64 64, \
+        Swallow  "wmmon" 'Exec exec wmmon')
+## wmsm
+*WinMakerAppButtons: (Frame 1, Size 64 64, \
+        Swallow  "wmmon" 'Exec exec wmmon -s')
+## wmnd
+*WinMakerAppButtons: (Frame 1, Size 64 64, \
+	Swallow  "wmnd" 'Exec exec wmnd')
+## Xterm & Terminal Panel
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+	Icon /home/coro/.fvwm/icons/coro/58x58/jeff-terminal01.png, \
+	Action	'exec xterm -cr red -bg black -fg lightgreen -vb', \
+        Action(Mouse 2) \
+        'MyPanelButtons "WinMakerAppPanelTerminal" $right $top', \
+        Action(Mouse 3) 'All (WinMakerAppPanelTerminal) Close')
+
+## AUDIO
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/audio.png, \
+        Action  'exec pavucontrol', \
+        Action(Mouse 2) \
+        'MyPanelButtons "WinMakerAppPanelAudio" $right $top', \
+        Action(Mouse 3) 'All (WinMakerAppPanelAudio) Close')
+
+## files
+#*WinMakerAppButtons: (Frame 0, Size 59 59, \
+#        Icon /home/coro/.fvwm/icons/coro/58x58/files.png, \
+#        Action 'exec dolphin4')
+
+## firefox
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/mozilla.png, \
+	Action 'exec firefox')
+
+## Thunderbird
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/pesthorn01.png, \
+        Action 'exec thunderbird')
+
+## Office & Office Panel
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/fallingdown.png, \
+        Action 'exec soffice')
+
+
+## Xkill
+*WinMakerAppButtons: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/64x64/xkill.png, \
+        Action 'exec xkill')
+
+# Panel: Terminal
+*WinMakerAppPanelTerminal: Rows 1
+*WinMakerAppPanelTerminal: Back #202020
+*WinMakerAppPanelTerminal: Fore black
+*WinMakerAppPanelTerminal: (Frame 0, Size 59 59, \
+	Icon /home/coro/.fvwm/icons/coro/58x58/xterm.png,)
+*WinMakerAppPanelTerminal: (Frame 0, Size 59 59, \
+	Icon /home/coro/.fvwm/icons/coro/58x58/terminator.png, \
+	Action 'exec terminator')
+
+# Panel: Audio
+*WinMakerAppPanelAudio: Rows 1
+*WinMakerAppPanelAudio: Back #202020
+*WinMakerAppPanelAudio: Fore black
+*WinMakerAppPanelAudio: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/qjackctl.png, \
+        Action 'exec qjackctl')
+*WinMakerAppPanelAudio: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/bitwig.png, \
+	Action 'exec bitwig-studio')
+*WinMakerAppPanelAudio: (Frame 0, Size 59 59, \
+        Icon /home/coro/.fvwm/icons/coro/58x58/mixxx.png, \
+        Action 'exec mixxx')
+
+
+#-------------------------------------------------------------------------------#
+# FVWM Pager settings                                                           #
+#-------------------------------------------------------------------------------#
+Style "FvwmPagerPager" !Title, !Handles, Sticky, WindowListSkip, CirculateSkip
+
+DestroyModuleConfig FvwmPagerPager: *
+*FvwmPagerPager: UseSkipList
+*FvwmPagerPager: Back #202020
+*FvwmPagerPager: Fore black
+*FvwmPagerPager: Font "xft:monospace:Bold:pixelsize=10;-adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*"
+*FvwmPagerPager: Hilight #008080
+*FvwmPagerPager: MiniIcons
+*FvwmPagerPager: Balloons
+*FvwmPagerPager: BalloonFore black
+*FvwmPagerPager: BalloonBack bisque
+*FvwmPagerPager: BalloonFont "xft:monospace:Medium:pixelsize=10;-*-fixed-medium-r-*-*-10-*-*-*-*-*-*-*"
+*FvwmPagerPager: Geometry 319x69+5000+5000
+*FvwmPagerPager: WindowColors white grey51 white Blue4
+*FvwmPagerPager: Label 0 main
+*FvwmPagerPager: Label 1 dev
+#*FvwmPagerPager: Label 2 virt
+*FvwmPagerPager: SmallFont "xft:sans-serif:Medium:pixelsize=8;-*-fixed-medium-r-*-*-8-*-*-*-*-*-*-*"
+
