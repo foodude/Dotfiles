@@ -141,30 +141,21 @@ ifaddr() {
 
     for iface in $IFACES
     do
-        IP4_ARRD=
         IP4_ADDR=`ip addr show dev $iface |grep -w inet |awk '{print $2}'`
         IP6_ADDR=`ip addr show dev $iface |grep -w inet6 |awk '{print $2}'`
+        IP_ADDR="$IP4_ADDR $IP6_ADDR"
 
         REPEAT_IFACE="$iface"
 
-        if echo $IP4_ADDR |grep -q '.'
+        if echo $IP_ADDR |grep -q '\.\|\:'
         then
-            for addr in $IP4_ADDR 
+            for addr in $IP_ADDR 
             do
                 printf "%-15s %s\n" "$REPEAT_IFACE" "$addr"
                 REPEAT_IFACE= 
             done 
         fi
-
-        if echo ${IP6_ADDR} |grep -q ':' 
-        then
-            for addr in $IP6_ADDR 
-            do
-                printf "%-15s %s\n" "$REPEAT_IFACE" "$addr"
-                REPEAT_IFACE= 
-            done
-            echo 
-        fi 
+        echo
     done 
 }     
 
