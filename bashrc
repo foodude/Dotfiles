@@ -1,3 +1,11 @@
+########################################################
+#          __________________________________          #
+#          | _ )  /_\  / __|| || || _ \ / __|          #
+#          | _ \ / _ \ \__ \| __ ||   /| (__           #
+#          |___//_/ \_\|___/|_||_||_|_\ \___|          #
+#                                                      #
+########################################################
+
 #-------------------------------#
 # GLOBALS                       #
 #-------------------------------#
@@ -5,7 +13,6 @@ TIME="/bin/date +%H%M%S"
 DATE="/bin/date +%Y%m%d"
 DTIME="/bin/date +%Y%m%d%H%M%S"
 HDT="/bin/date +%Y.%m.%d-%H:%M:%S"
-EDITOR="/usr/bin/vim"
 BACKUP_DIR="${HOME}/backup/bash"
 
 
@@ -13,15 +20,20 @@ BACKUP_DIR="${HOME}/backup/bash"
 #-------------------------------#
 # COLORS                        #
 #-------------------------------#
-case ${TERM} in
-    xterm-color|*-256color) USE_COLORS=1
-                            ARG_COLOR='auto'  ;;
-    ?*                    ) USE_COLORS=0
-                            ARG_COLOR='never' ;;
+case ${TERM} 
+in
+    xterm-color|*-256color )
+        USE_COLORS=1
+        ARG_COLOR='auto'  ;;  
+    ?* )
+        USE_COLORS=0
+        ARG_COLOR='never' ;;
 esac
 
-if [ "$USE_COLORS" = 1 ] ;then
-    ## black background for bright 
+
+if [ "$USE_COLORS" = 1 ] 
+then
+    ## black background for bright
     ## terminals themes
     bg_black=`tput setab 0`
 
@@ -49,19 +61,25 @@ if [ "$USE_COLORS" = 1 ] ;then
     ## color escape sequence
     esc="$(tput sgr0)"
 
-    ## load terminal colors 
-    if [ -f "${HOME}/.dircolors" ] ;then
-        eval $(dircolors -b $HOME/.dircolors) ;fi ;fi
+    ## load terminal colors
+    if [ -f "${HOME}/.dircolors" ]
+    then
+        eval $(dircolors -b $HOME/.dircolors) 
+    fi 
+fi
 
 
 
 #-------------------------------#
 # FUNCTIONS                     #
 #-------------------------------#
+## Extract archive files
+## extract <file.format>
 extract(){
     ERR_MSG="could not extract! ( $1 )"
 
-    if [ -f $1 ] ;then
+    if [ -f $1 ] 
+    then
         case $1 in
             *.tar.bz2 ) tar xjf $1      ;;
             *.tar.gz  ) tar xzf $1      ;;
@@ -76,74 +94,94 @@ extract(){
             *.7z      ) 7z x $1         ;;
             *         ) echo $ERR_MSG   ;;
         esac
+
     else
-        echo "is not a valid file! ( $1 )" ;fi ;}
+        echo "is not a valid file! ( $1 )"
+    fi 
+}
 
 
-file_backup(){
-    FN=${FUNCNAME}
-    ## CHK: if backup dir exist
-    if [ ! -d "${BACKUP_DIR}" ] ;then
-        if ! mkdir -p ${BACKUP_DIR} ;then
-            echo "${FN} err, could not create backup dir ( ${BACKUP_DIR} )"
-            return 1 ;fi ;fi
+## List largest files in a direcory
+## list_largest_files | list_largest_files <1|2|3|...n>
+list_largest_files() {
+    LINES="${1:-20}"
+    du -h -x -s -- * | sort -r -h | head -${LINES} ;}
 
-    ## CHK: if backup dir has write access
-    if [ ! -w "${BACKUP_DIR}" ] ;then
-        echo "${FN} err, backup dir has no write access! ( ${BACKUP_DIR} )"
-        return 1 ;fi
 
-    ## CHK: if file is a directory
-    if [ -d "$1" ] ;then
-       echo "${FN} err, wont backup entire directory! ( $1 )"
-       return 1 ;fi
-
-    ## CHK: permission
-    if [ ! -r "$1" ] ;then
-        CMD='sudo cp'
+## sudo or sudo the last command if no argument is specified
+s() {
+    if [[ $# == 0 ]]
+    then
+        sudo $(history -p '!!')
     else
-        CMD='cp' ;fi 
-
-    ## COPY: file to backup dir
-    if ! ${CMD} ${1} ${BACKUP_DIR}/`basename ${1}` ;then
-        echo "${FN} err, could not copy file! ( $1 )"
-        return 1 ;fi ;}
+        sudo "$@" 
+    fi 
+}
 
 
-edit(){
-    if [ -z "$1" ] ;then
-        $EDITOR 
-        return 0 ;fi
-
-    if [ ! -f "$1" ] ;then
-        $EDITOR $1 
-        return 0 ;fi
-
-    if [ -w "$1" ] ;then
-        file_backup $1
+## edit file with specified editor $EDITOR
+## automatically decide to use sudo or not
+## args: </path/file>
+e() {
+    if [ -w "$1" ] 
+    then
         $EDITOR $1
 
     else
-        file_backup $1
-        sudo $EDITOR $1 ;fi ;}
+        sudo $EDITOR $1 
+    fi 
+}
 
+
+# ifconfig was cool, and ip is more cool
+# but most of the time, they are to verbose ;)
+# args: <inet|inet6> default: <inet>
+ifaddr() {
+    IFACES=`cat /proc/net/dev |awk '{print $1}' |grep ':' |cut -d ':' -f 1`
+
+    for iface in $IFACES
+    do
+        IP4_ARRD=
+        IP4_ADDR=`ip addr show dev $iface |grep -w inet |awk '{print $2}'`
+        IP6_ADDR=`ip addr show dev $iface |grep -w inet6 |awk '{print $2}'`
+
+        REPEAT_IFACE="$iface"
+
+        if echo $IP4_ADDR |grep -q '.'
+        then
+            for addr in $IP4_ADDR 
+            do
+                printf "%-15s %s\n" "$REPEAT_IFACE" "$addr"
+                REPEAT_IFACE= 
+            done 
+        fi
+
+        if echo ${IP6_ADDR} |grep -q ':' 
+        then
+            for addr in $IP6_ADDR 
+            do
+                printf "%-15s %s\n" "$REPEAT_IFACE" "$addr"
+                REPEAT_IFACE= 
+            done
+            echo 
+        fi 
+    done 
+}     
 
 
 #-------------------------------#
 # HISTORY                       #
 #-------------------------------#
-HISTCONTROL=ignoreboth
 shopt -s histappend
 HISTSIZE=5000
 HISTFILESIZE=5000
+HISTCONTROL=ignoredups
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 
 #-------------------------------#
 # ALIASES                       #
 #-------------------------------#
-
 ## LS
 alias ls="ls --color=${ARG_COLOR}"
 
@@ -160,16 +198,20 @@ alias gh="history |grep"
 alias gp="ps aux  |grep"
 alias gf="find .  |grep"
 
-## MISC
-alias lock='i3lock -i ~/pic/bg/swave01.png'
-
+# MISC
+alias c='clear'
+alias h='history'
+alias tree='tree --dirsfirst -F'
+alias mkdir='mkdir -p -v'
 
 
 #-------------------------------#
 # EXPORTS                       #
 #-------------------------------#
+export EDITOR=vim
 export PATH=~/.local/bin:$PATH
 export PATH="${PATH}:${HOME}/bin"
+export REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-bundle.trust.crt'
 
 
 
@@ -177,24 +219,18 @@ export PATH="${PATH}:${HOME}/bin"
 # MISC                          #
 #-------------------------------#
 ## check window size after each command
-shopt -s checkwinsize 
+shopt -s checkwinsize
 
-## lesspipe
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-## bash completion
-if ! shopt -oq posix ;then
-  if [ -f /usr/share/bash-completion/bash_completion ] ;then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ] ;then
-    . /etc/bash_completion ;fi ;fi
+## auto cd into directories
+shopt -s autocd
 
 
 
 #-------------------------------#
 # PROMT                         #
 #-------------------------------#
-if [ "$USER" = 'root' ] ;then
+if [ "$USER" = 'root' ] 
+then
     PS1_TIME="${bg_black}${white}[${yellow_1}\t${white}]"
     PS1_USER_AT_HOST="[${red_3}\u${white}@${purple_3}\h${white}]"
     PS1_DIR_PATH="[${blue_3}\w${white}]${esc}\n  "
@@ -204,9 +240,9 @@ if [ "$USER" = 'root' ] ;then
 
 else
     PS1_TIME="${bg_black}${white}[${yellow_1}\t${white}]"
-    PS1_USER_AT_HOST="[${green_3}\u${white}@${purple_3}\h${white}]"
+    PS1_USER_AT_HOST="[${green_1}\u${white}@${purple_3}\h${white}]"
     PS1_DIR_PATH="[${blue_3}\w${white}]${esc}\n  "
 
     ## [time][user@host][/dir_path]
-    PS1="${PS1_TIME}${PS1_USER_AT_HOST}${PS1_DIR_PATH}" ;fi
-
+    PS1="${PS1_TIME}${PS1_USER_AT_HOST}${PS1_DIR_PATH}" 
+fi
