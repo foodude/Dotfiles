@@ -135,7 +135,6 @@ e() {
 
 # ifconfig was cool, and ip is more cool
 # but most of the time, they are to verbose ;)
-# args: <inet|inet6> default: <inet>
 ifaddr() {
     IFACES=`cat /proc/net/dev |awk '{print $1}' |grep ':' |cut -d ':' -f 1`
 
