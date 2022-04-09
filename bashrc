@@ -5,6 +5,41 @@
 #          |___//_/ \_\|___/|_||_||_|_\ \___|          #
 #                                                      #
 ########################################################
+#
+# [ FUNCTIONS ]
+#
+# extract <file.format>
+#   Extract compressed files
+#   Formats: tar.bz2, tar.gz, bz2, rar, gz, tar, tbz2, tgz, zip, Z, 7z
+# 
+# list_largest_files | list_largest_files <1|2|3>
+#   List largest files in current directory
+#
+# e <filename>
+#   Edit file with defined $EDITOR and decide automatically to
+#   use sudo or not
+#
+# s | s <command>
+#   Sudo last command, or sudo <command>
+#
+# ifaddr
+#  List Network interfaces and its ip4 and ip6 addresses
+#
+#
+# [ ALIASES ]
+#  
+# cd. |cd.. |cd...
+#   cd ../ |cd ../../ |cd ../../../
+#
+# gh <expression>
+#   grep bash history
+#
+# gp <expression>
+#   grep processes
+#
+# gf <expression>
+#   grep find
+
 
 #-------------------------------#
 # GLOBALS                       #
