@@ -233,12 +233,10 @@ alias mkdir='mkdir -p -v'
 #-------------------------------#
 # EXPORTS                       #
 #-------------------------------#
+PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/snap/bin'
+export PATH="${PATH}:~/local/bin:~/bin"
 export EDITOR=vim
-export PATH=~/.local/bin:$PATH
-export PATH="${PATH}:${HOME}/bin"
-export REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-bundle.trust.crt'
-
-
+``
 
 #-------------------------------#
 # MISC                          #
