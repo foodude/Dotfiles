@@ -171,7 +171,7 @@ e() {
 # ifconfig was cool, and ip is more cool
 # but most of the time, they are to verbose ;)
 ifaddr() {
-    IFACES=`cat /proc/net/dev |awk '{print $1}' |grep ':' |cut -d ':' -f 1`
+    IFACES=`awk '{print $1}' < /proc/net/dev |grep ':' |cut -d ':' -f 1`
 
     for iface in $IFACES
     do
